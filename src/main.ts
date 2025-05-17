@@ -4,7 +4,13 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+  // Instância HTTP padrão do NestJS
+  const httpApp = await NestFactory.create(AppModule);
+  const httpPort = process.env.API_PORT ? Number(process.env.API_PORT) : 3000; // Porta HTTP padrão
+  await httpApp.listen(httpPort);
+
+  // Microserviço MQTT
+  const mqttApp = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
       transport: Transport.MQTT,
@@ -18,8 +24,9 @@ async function bootstrap() {
       },
     },
   );
-  await app.listen();
+  await mqttApp.listen();
   console.log('🟢 Microserviço MQTT rodando e aguardando mensagens...');
+  console.log(`🟢 API HTTP rodando na porta ${httpPort}`);
 }
 
 bootstrap();

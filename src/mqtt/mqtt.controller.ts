@@ -1,5 +1,5 @@
 // src/mqtt/mqtt.controller.ts
-import { Controller, Logger } from '@nestjs/common';
+import { Controller, Get, Logger } from '@nestjs/common';
 import { MqttService } from './mqtt.service';
 import {
   MessagePattern,
@@ -31,7 +31,9 @@ export class MqttController {
     await this.mqttService.saveSensorData(payload);
   }
 
-  // Também é possível usar topics exatos:
-  // @MessagePattern('alerts/high-temperature')
-  // handleHighTemp(@Payload() payload: any) { … }
+  // endpoint para ver o agrupamento/soma:
+  @Get('dashboard')
+  async getDashboard() {
+    return this.mqttService.eventByDayAndHour();
+  }
 }

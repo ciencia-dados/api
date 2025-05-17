@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+      - sqlite_data:/usr/src/app/prisma
+    ports:
+      - "${API_PORT:-3000}:3000" 
+    env_file:
+      - .env
+    command: ["npm", "start"]
+    environment:
+      - NODE_ENV=production
+
+volumes:
+  sqlite_data:
