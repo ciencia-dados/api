@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client-js"
-  //output   = "../generated/prisma"
-  output   = "../node_modules/.prisma/client"
+  output   = "../generated/prisma"
+  //output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -9,7 +9,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model data {
+model Data {
   id        Int      @id @default(autoincrement())
   espId     String
   valor     String
