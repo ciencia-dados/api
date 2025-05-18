@@ -13,7 +13,7 @@ services:
       - "${API_PORT:-3000}:3000" 
     env_file:
       - .env
-    command: ["npm", "start"]
+    command: ["sh", "-c", "npx prisma generate && yarn start"]
     environment:
       - NODE_ENV=production
 
