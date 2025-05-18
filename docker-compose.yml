@@ -7,12 +7,12 @@ services:
       dockerfile: Dockerfile
     working_dir: /usr/src/app
     volumes:
-      - sqlite_data:/usr/src/app/prisma
+      - sqlite_data:/usr/src/app/prisma/database
     ports:
       - "${API_PORT:-3000}:3000" 
     env_file:
       - .env
-    command: ["sh", "-c", "yarn start:prod"]
+    command: ["sh", "-c", "npx prisma migrate dev && yarn start:prod"]
     environment:
       - NODE_ENV=production
 

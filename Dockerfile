@@ -1,6 +1,8 @@
-FROM node:23-alpine
+FROM node:20-alpine3.18
 
 WORKDIR /usr/src/app
+
+RUN apk add --no-cache libssl1.1
 
 COPY package*.json ./
 COPY yarn.lock ./
