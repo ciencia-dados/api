@@ -30,10 +30,4 @@ export class MqttController {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     await this.mqttService.saveSensorData(payload);
   }
-
-  // endpoint para ver o agrupamento/soma:
-  @Get('dashboard')
-  async getDashboard() {
-    return this.mqttService.eventByDayAndHour();
-  }
 }

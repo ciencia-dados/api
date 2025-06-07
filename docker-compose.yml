@@ -1,20 +1,71 @@
-version: '3.8'
-
 services:
+  influxdb:
+    image: influxdb:2.6
+    container_name: influxdb
+    ports:
+      - "${INFLUXDB_PORT}:${INFLUXDB_PORT}"   # agora INFLUXDB_PORT existe
+    env_file:
+      - .env
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: admin123456
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: admin123456
+      DOCKER_INFLUXDB_INIT_ORG: docs
+      DOCKER_INFLUXDB_INIT_BUCKET: home
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+
   api:
     build:
       context: .
       dockerfile: Dockerfile
     working_dir: /usr/src/app
-    volumes:
-      - sqlite_data:/usr/src/app/prisma/database
     ports:
-      - "${API_PORT:-3000}:3000" 
+      - "${API_PORT}:3000"
     env_file:
       - .env
-    command: ["sh", "-c", "npx prisma migrate dev && yarn start:prod"]
+    command: ["sh", "-c", "yarn start:prod"]
     environment:
       - NODE_ENV=production
+      - INFLUX_URL=${INFLUX_URL}
+      - INFLUX_TOKEN=${INFLUX_TOKEN}
+      - INFLUX_ORG=${INFLUX_ORG}
+      - INFLUX_BUCKET=${INFLUX_BUCKET}
+    depends_on:
+      - influxdb
+  
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto-broker
+    restart: always
+    ports:
+      - "1883:1883"    # Porta padrão MQTT
+      - "9090:9090"    # Porta WebSocket
+    volumes:
+      - ./mqtt-broker/config:/mosquitto/config
+      - ./mqtt-broker/data:/mosquitto/data
+      - ./mqtt-broker/log:/mosquitto/log
+  
+  grafana:
+    image: grafana/grafana-oss:9.5.2
+    container_name: grafana
+    ports:
+      - "3001:3000"       
+    env_file:
+      - .env             
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - influxdb
 
 volumes:
-  sqlite_data:
+  influxdb-data:
+  grafana-data:

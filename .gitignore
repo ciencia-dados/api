@@ -5,7 +5,6 @@
 /generated
 
 #database
-/prisma/database/
 
 # Logs
 logs

@@ -1,6 +1,7 @@
 // src/mqtt/mqtt.service.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { InfluxDB, Point, WriteApi } from '@influxdata/influxdb-client';
+
 
 export interface SensorPayload {
   espId: string;
@@ -11,53 +12,37 @@ export interface SensorPayload {
 @Injectable()
 export class MqttService {
   private readonly logger = new Logger(MqttService.name);
+  private writeApi: WriteApi;
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor() {
+    const url    = process.env.INFLUX_URL!;
+    const token  = process.env.INFLUX_TOKEN!;
+    const org    = process.env.INFLUX_ORG!;
+    const bucket = process.env.INFLUX_BUCKET!;
+
+    console.debug({ url, token, org, bucket });
+
+    const client = new InfluxDB({ url, token });
+    this.writeApi = client.getWriteApi(org, bucket, 'ns');
+  }
 
   async saveSensorData(payload: SensorPayload) {
     const { espId, valor, timestamp } = payload;
+
+    const pt = new Point('esp_data')       
+      .tag('espId', espId)                // coloca espId como tag
+      .stringField('valor', valor)        // valor como campo string
+      .timestamp(new Date(timestamp));
+
 
     // Parse dos campos
     const ts = new Date(timestamp).toISOString();
     console.log('ts');
     console.log(ts);
 
-    try {
-      const record = await this.prisma.data.create({
-        data: {
-          espId,
-          valor: valor,
-          timestamp: ts,
-        },
-      });
-      this.logger.log(`Dados salvos: ${JSON.stringify(record)}`);
+    this.writeApi.writePoint(pt);
+    await this.writeApi.flush();
+    this.logger.log(`Gravado ESP data: ${espId} → ${valor}`);
 
-      return record;
-    } catch (error) {
-      this.logger.error('Erro ao salvar sensor data', error);
-      throw error;
-    }
-  }
-
-  /** Conta e agrupa eventos por dia e hora */
-  async eventByDayAndHour() {
-    const raw = await this.prisma.$queryRaw<
-      { date: string; hour: string; count: bigint; espId: string }[]
-    >`
-      SELECT
-        date( datetime(CAST(timestamp/1000 AS integer), 'unixepoch') ) AS date,
-        strftime('%H', datetime(CAST(timestamp/1000 AS integer), 'unixepoch') ) AS hour,
-        COUNT(*) AS "count",
-        espId AS "espId"
-      FROM "data"
-      GROUP BY date, hour, espId
-      ORDER BY date ASC, hour ASC;
-    `;
-    return raw.map((row) => ({
-      date: row.date,
-      hour: row.hour,
-      espId: row.espId,
-      count: Number(row.count),
-    }));
   }
 }
