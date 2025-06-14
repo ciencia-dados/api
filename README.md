@@ -25,13 +25,14 @@ Este projeto fornece uma API RESTful construída com [NestJS](https://nestjs.com
 ---
 
 ## 📦 Estrutura do Projeto
-
+```
 ├── api/ # Código-fonte da API NestJS
 ├── grafana/ # Provisionamento de dashboards
 ├── mqtt-broker/ # Configurações do Mosquitto
 ├── grafana-data/ # Dados persistidos do Grafana
 ├── docker-compose.yml # Orquestração dos serviços
 └── .env # Variáveis de ambiente
+```
 
 ## 🧪 Pré-requisitos
 
@@ -99,9 +100,11 @@ Senha: mestre123
 A API estará acessível em: http://localhost:3000
 
 O Grafana estará em: http://localhost:3001 com o dashboard Eventos IoT.
+
 Usuário: admin, Senha: admin123456
 
 O InfluxDB em: http://localhost:8086
+
 Usuário: admin, Senha: admin123456
 
 ## 📚 Referências
@@ -118,4 +121,3 @@ Usuário: admin, Senha: admin123456
 Este projeto é licenciado sob a MIT License.
 
 ---
-Se desejar, posso adaptar esse `README` para ser em inglês, ou torná-lo mais técnico para apresentação em relatórios acadêmicos. Deseja isso?
