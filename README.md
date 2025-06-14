@@ -6,12 +6,11 @@ Este projeto fornece uma API RESTful construída com [NestJS](https://nestjs.com
 
 ## 🚀 Funcionalidades
 
-- 📥 Recebimento de dados via HTTP
+- 📥 Recebimento de dados via MQTT
 - 📊 Armazenamento em banco de séries temporais (InfluxDB)
 - 🔗 Integração com broker MQTT (Eclipse Mosquitto)
 - 📡 Estrutura pronta para dashboards com Grafana
-- 🌐 API RESTful com endpoints documentados
-
+- 🌐 Conexão do Grafana com banco (InfluxDB)
 ---
 
 ## 🛠️ Tecnologias Utilizadas
@@ -70,23 +69,26 @@ MQTT_PASSWORD="mestre123"
 
 ## ▶️ Como Executar
 # Clone o repositório
+```
 git clone https://github.com/ciencia-dados/api.git
 cd api
+```
 
 # Suba os containers
+```
 docker-compose up --build
-
+```
 
 # 🧪 Exemplo de Payload para o MQTT
 
 Com a utilização de um cliente MQTT pode ser enviado um playload com as parâmentros abaixo:
 
 
-Servidor: localhost
-Porta: 1883
-Tópico: iot/leituras
-Usuário: mestre
-Senha: mestre123
+- Servidor: localhost
+- Porta: 1883
+- Tópico: iot/leituras
+- Usuário: mestre
+- Senha: mestre123
 
 ```
 {
@@ -115,9 +117,5 @@ Usuário: admin, Senha: admin123456
 - [Grafana Documentation](https://grafana.com/docs/)
 
 
-
-
 # 📌 Licença
 Este projeto é licenciado sob a MIT License.
-
----
