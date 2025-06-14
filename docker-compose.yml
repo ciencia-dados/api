@@ -49,6 +49,7 @@ services:
   
   grafana:
     image: grafana/grafana-oss:9.5.2
+    user: "472"
     container_name: grafana
     ports:
       - "3001:3000"       
@@ -60,7 +61,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=false
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
     volumes:
-      - grafana-data:/var/lib/grafana
+      - ./grafana-data:/var/lib/grafana
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
     depends_on:
