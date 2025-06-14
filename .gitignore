@@ -5,6 +5,8 @@
 /generated
 
 #database
+/mqtt-broker/data
+/mqtt-broker/log
 
 # Logs
 logs
