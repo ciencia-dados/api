@@ -43,9 +43,9 @@ services:
       - "1883:1883"    # Porta padrão MQTT
       - "9090:9090"    # Porta WebSocket
     volumes:
-      - ./mqtt-broker/config:/mosquitto/config
-      - ./mqtt-broker/data:/mosquitto/data
-      - ./mqtt-broker/log:/mosquitto/log
+      - ./mqtt/config:/mosquitto/config
+      - ./mqtt/data:/mosquitto/data
+      - ./mqtt/log:/mosquitto/log
   
   grafana:
     image: grafana/grafana-oss:9.5.2
