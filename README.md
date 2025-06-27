@@ -101,13 +101,22 @@ Com a utilização de um cliente MQTT pode ser enviado um playload com as parâm
 # Acessos
 A API estará acessível em: http://localhost:3000
 
+![image](https://github.com/user-attachments/assets/4ad741f9-d337-4db2-8695-1d3dab94bfef)
+
+
 O Grafana estará em: http://localhost:3001 com o dashboard Eventos IoT.
 
 Usuário: admin, Senha: admin123456
 
+![Imagem do WhatsApp de 2025-06-26 à(s) 20 48 04_4a31651b](https://github.com/user-attachments/assets/fad842b7-f36a-46f4-be97-88d031a0138f)
+
+
 O InfluxDB em: http://localhost:8086
 
 Usuário: admin, Senha: admin123456
+
+![image](https://github.com/user-attachments/assets/a7eb6559-38fd-4bf3-8cf1-682a7eb5c5d8)
+
 
 ## 📚 Referências
 
